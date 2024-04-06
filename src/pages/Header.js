@@ -1,30 +1,35 @@
-import React from "react";
-import { Dropdown } from "react-bootstrap";
+import React, { useState } from 'react';
+import { Dropdown } from 'react-bootstrap';
+import UserProfileModal from './UserProfile';
 import "../Styles/Header.css";
 
 function Header() {
+  const [showProfileModal, setShowProfileModal] = useState(false);
+
+  const handleProfileClick = () => {
+    setShowProfileModal(true);
+  };
+
+  const handleCloseProfileModal = () => {
+    setShowProfileModal(false);
+  };
+
   return (
-    <div className="container-fluid bg-dark">
-      <div className="row">
-        <div className="col"></div>
-        <div className="col d-flex justify-content-end align-items-center">
-          <Dropdown>
-            <Dropdown.Toggle
-              variant="secondary"
-              id="dropdown-basic"
-              className="custom-toggle"
-            >
-              User Profile
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">Profile</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Settings</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Logout</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
+    <>
+      <div className="position-absolute top-0 end-0 m-3">
+        <Dropdown>
+          <Dropdown.Toggle
+            variant="secondary"
+            id="dropdown-basic"
+            className="custom-toggle"
+            onClick={handleProfileClick}
+          >
+            User Profile
+          </Dropdown.Toggle>
+        </Dropdown>
       </div>
-    </div>
+      <UserProfileModal show={showProfileModal} handleClose={handleCloseProfileModal} />
+    </>
   );
 }
 

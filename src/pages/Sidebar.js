@@ -1,33 +1,37 @@
 import React from "react";
-import { BiFridge, BiBook, BiFoodMenu, BiFolder, BiBarChart, BiCart } from "react-icons/bi"; // Import Bootstrap Icons
+import { BiFridge, BiBook, BiFoodMenu, BiFolder, BiBarChart, BiCart, BiLogOut } from "react-icons/bi";
+import { Link } from "react-router-dom";
 import "../Styles/Sidebar.css"; 
 
 function Sidebar() {
   return (
     <div className="bg-white">
       <div className="m-2">
-        <span className="brand-name fs-4">App Name</span>
+      <span className="fs-4 fw-bold ">Food Diary</span>
       </div>
       <hr className="text-dark" />
       <div className="list-group list-group-flush">
-        <a className="list-group-item list-group-item-action py-2 my-1">
+        <Link to="/" className="list-group-item list-group-item-action py-2 my-1">
           <BiFridge className="icon" /> Fridge
-        </a>
-        <a className="list-group-item list-group-item-action py-2 my-1">
+        </Link>
+        <Link to="/recipes" className="list-group-item list-group-item-action py-2 my-1">
           <BiBook className="icon" /> Recipes
-        </a>
-        <a className="list-group-item list-group-item-action py-2 my-1">
+        </Link>
+        <Link to="/meals" className="list-group-item list-group-item-action py-2 my-1">
           <BiFoodMenu className="icon" /> Meals
-        </a>
-        <a className="list-group-item list-group-item-action py-2 my-1">
+        </Link>
+        <Link to="/portfolio" className="list-group-item list-group-item-action py-2 my-1">
           <BiFolder className="icon" /> Portfolio
-        </a>
-        <a className="list-group-item list-group-item-action py-2 my-1">
+        </Link>
+        <Link to="/statistic" className="list-group-item list-group-item-action py-2 my-1">
           <BiBarChart className="icon" /> Statistic
-        </a>
-        <a className="list-group-item list-group-item-action py-2 my-1">
+        </Link>
+        <Link to="/shopping-list" className="list-group-item list-group-item-action py-2 my-1">
           <BiCart className="icon" /> Shopping List
-        </a>
+        </Link>
+        <Link to="/login" className="list-group-item list-group-item-action py-2 my-1">
+          <BiLogOut className="icon" /> Logout
+        </Link>
       </div>
     </div>
   );

@@ -1,20 +1,29 @@
 .custom-toggle {
-   color: orange !important; 
-   background-color: transparent !important; 
-   border: none !important; 
-   box-shadow: none; 
-   padding: 0; 
- }
- 
- .profile-icon {
-   display: inline-block;
-   width: 40px; 
-   height: 40px; 
-   border-radius: 50%; 
-   background-color: orange; 
-   color: white; 
-   font-size: 24px; 
-   line-height: 40px;
-   text-align: center;
- }
- 
+  color: orange !important; 
+  background-color: transparent !important; 
+  border: none !important; 
+  box-shadow: none; 
+  padding: 0; 
+}
+
+.custom-toggle:hover {
+  color: white !important;
+  background-color: orange !important;
+}
+
+.profile-icon {
+  display: inline-block;
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%; 
+  background-color: orange; 
+  color: white; 
+  font-size: 24px; 
+  line-height: 40px;
+  text-align: center;
+}
+
+.profile-icon:hover {
+  background-color: white;
+  color: orange;
+}

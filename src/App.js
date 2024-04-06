@@ -1,18 +1,19 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
+import Sidebar from "./pages/Sidebar";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </Router>
+    <div className="container-fluid bg-dark min-vh-100">
+      <div className="row">
+        <div className="col-2 bg-white vh-100">
+          <Sidebar />
+        </div>
+        <div className="col-auto">
+          <Home />
+        </div>
+      </div>
+    </div>
   );
 }
 
