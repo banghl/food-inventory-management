@@ -22,6 +22,7 @@ function UserProfileModal({ show, handleClose }) {
           <Form.Group controlId="formDietaryPreferences">
             <Form.Label>Dietary Preferences</Form.Label>
             <Form.Control as="select">
+              <option>Normal</option>
               <option>Vegetarian</option>
               <option>Vegan</option>
               <option>Keto</option>
