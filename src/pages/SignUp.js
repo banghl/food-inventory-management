@@ -12,13 +12,35 @@ const SignUp = () => {
     setUserType(type);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(`User type: ${userType}`);
-    console.log(`Username: ${username}`);
-    console.log(`Email: ${email}`);
-    console.log(`Password: ${password}`);
-    console.log(`Confirm Password: ${confirmPassword}`);
+
+    const requestBody = {
+      username,
+      email,
+      password,
+      role: userType.toUpperCase(),
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (response.ok) {
+        // Registration successful, redirect to login page
+        window.location.href = "/login";
+      } else {
+        // Handle registration failure
+        console.error("Registration failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
