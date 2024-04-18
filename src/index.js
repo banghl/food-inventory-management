@@ -9,12 +9,14 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Home from './pages/Home';
 import UserProfile from './pages/UserProfile'; 
+import Profile from './pages/Profile';
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Routes>
         <Route path="/" element={<App />}/>
+        <Route path="/profile" element={<Profile />}/>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<UserProfile />} />

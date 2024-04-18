@@ -1,27 +1,51 @@
 import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
-
+import { useNavigate } from "react-router-dom";
+ 
 const Login = () => {
   const [userType, setUserType] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); 
 
   const handleUserTypeChange = (type) => {
     setUserType(type);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(`User type: ${userType}`);
-    console.log(`Username: ${username}`);
-    console.log(`Password: ${password}`);
+
+    const requestBody = {
+      username,
+      password,
+      userType,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        // Redirect to main page upon successful login
+        navigate("/");
+      } else {
+        // Handle login failure
+        console.error("Login failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
     <div
       style={{
-        backgroundColor: "#121212", 
+        backgroundColor: "#121212",
         height: "100vh",
         display: "flex",
         justifyContent: "center",
@@ -31,10 +55,10 @@ const Login = () => {
       <Container
         className="p-5 rounded-lg shadow-lg"
         style={{
-          backgroundColor: "rgba(0, 0, 0, 0.7)", 
+          backgroundColor: "rgba(0, 0, 0, 0.7)",
           maxWidth: "400px",
-          color: "orange", 
-          border: "2px solid orange", 
+          color: "orange",
+          border: "2px solid orange",
         }}
       >
         <h2 className="text-center mb-4">Login</h2>
@@ -42,11 +66,13 @@ const Login = () => {
           <Button
             variant="dark"
             onClick={() => handleUserTypeChange("user")}
-            className={`rounded-pill px-4 py-2 ${userType === "user" ? "bg-orange text-light" : "text-light"}`}
-            style={{ 
+            className={`rounded-pill px-4 py-2 ${
+              userType === "user" ? "bg-orange text-light" : "text-light"
+            }`}
+            style={{
               transition: "background-color 0.3s",
               backgroundColor: userType === "user" ? "orange" : "",
-              color: userType === "user" ? "white" : ""
+              color: userType === "user" ? "white" : "",
             }}
           >
             User
@@ -54,11 +80,13 @@ const Login = () => {
           <Button
             variant="dark"
             onClick={() => handleUserTypeChange("admin")}
-            className={`rounded-pill px-4 py-2 ${userType === "admin" ? "bg-orange text-light" : "text-light"}`}
-            style={{ 
+            className={`rounded-pill px-4 py-2 ${
+              userType === "admin" ? "bg-orange text-light" : "text-light"
+            }`}
+            style={{
               transition: "background-color 0.3s",
               backgroundColor: userType === "admin" ? "orange" : "",
-              color: userType === "admin" ? "white" : ""
+              color: userType === "admin" ? "white" : "",
             }}
           >
             Admin
