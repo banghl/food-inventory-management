@@ -18,7 +18,7 @@ const Login = () => {
     const requestBody = {
       username,
       password,
-      userType,
+      roles
     };
 
     try {
