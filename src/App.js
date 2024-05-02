@@ -1,6 +1,11 @@
 import React from "react";
-import Home from "./pages/Home";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Sidebar from "./pages/Sidebar";
+import Home from "./pages/Home";
+import Fridge from "./pages/SideBarPages/Fridge";
+import Recipes from './pages/SideBarPages/Recipes';
+import Meals from './pages/SideBarPages/Meals';
+import ShoppingList from './pages/SideBarPages/ShoppingList';
 
 function App() {
   return (
@@ -18,3 +23,4 @@ function App() {
 }
 
 export default App;
+
