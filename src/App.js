@@ -1,20 +1,50 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Sidebar from "./pages/Sidebar";
-import Home from "./pages/Home";
-import Fridge from "./pages/SideBarPages/Fridge";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Home from './pages/Home';
+import Fridge from './pages/SideBarPages/Fridge';
 import Recipes from './pages/SideBarPages/Recipes';
 import Meals from './pages/SideBarPages/Meals';
 import ShoppingList from './pages/SideBarPages/ShoppingList';
+import Sidebar from './pages/Sidebar';
+import Statistics from './pages/SideBarPages/Statistics';
 
 function App() {
+  const [selectedCategory, setSelectedCategory] = useState('fridge'); 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate('/login');
+  };
+
+  let content;
+  switch (selectedCategory) {
+    case 'fridge':
+      content = <Fridge />;
+      break;
+    case 'recipes':
+      content = <Recipes />;
+      break;
+    case 'meals':
+      content = <Meals />;
+      break;
+    case 'shopping-list':
+      content = <ShoppingList />;
+      break;
+    case 'statistic':
+      content = <Statistics />;
+      break;
+    default:
+      content = <Home />;
+  }
+
   return (
     <div className="container-fluid bg-dark min-vh-100">
       <div className="row">
         <div className="col-2 bg-white vh-100">
-          <Sidebar />
+          <Sidebar onSelectCategory={setSelectedCategory} onLogout={handleLogout} />
         </div>
         <div className="col-auto">
+          {content}
           <Home />
         </div>
       </div>
@@ -23,4 +53,3 @@ function App() {
 }
 
 export default App;
-
