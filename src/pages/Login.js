@@ -7,41 +7,40 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
   
-
-  const requestBody = {
-    username,
-    password,
-  };
-
-  try {
-    const response = await fetch('http://localhost:8080/api/v1/users/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Basic ' + btoa(username + ":" + password),
-    },
-    body: JSON.stringify(requestBody),
-  });
-
-    if (response.ok) {
-      const data = await response.json();
-      const token = data.token; // Assuming the server returns a 'token' property
-
-      // Store the token in the client-side application's state or local storage
-      localStorage.setItem('authToken', token);
-
-      navigate('/profile');
-    } else {
-      console.error('Login failed');
+    const requestBody = {
+      username,
+      password,
+    };
+  
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + btoa(username + ":" + password),
+        },
+        body: JSON.stringify(requestBody),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        const token = data.data.token; // Retrieve the token from data.token
+        
+        localStorage.setItem('authToken', token);
+        console.log('Stored token:', localStorage.getItem('authToken')); // Test token storage
+  
+        navigate('/profile');
+      } else {
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
     }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
+  };
+  
 
   return (
     <div
