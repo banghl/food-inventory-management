@@ -52,13 +52,17 @@ function Fridge() {
         : "http://localhost:8080/api/v1/items/add";
       const method = editItemId ? "PUT" : "POST";
 
+      // Capitalize the first letter of the category
+      const capitalizedCategory =
+        newItem.category.charAt(0).toUpperCase() + newItem.category.slice(1);
+
       const response = await fetch(url, {
         method,
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newItem),
+        body: JSON.stringify({ ...newItem, category: capitalizedCategory }),
       });
 
       if (!response.ok) {
@@ -123,33 +127,44 @@ function Fridge() {
   const editItem = async (itemId) => {
     try {
       const token = getToken();
-      const response = await fetch(
-        `http://localhost:8080/api/v1/items/${itemId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+      const url = `http://localhost:8080/api/v1/items/update/${itemId}`; // Use itemId parameter
+      const method = "PUT";
+
+      // Filter out null values from newItem
+      const filteredNewItem = Object.fromEntries(
+        Object.entries(newItem).filter(([_, value]) => value !== null)
       );
-  
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(filteredNewItem),
+      });
+
       if (!response.ok) {
         const message = await response.text();
         throw new Error(`HTTP ${response.status}: ${message}`);
       }
-  
+
       const responseData = await response.json();
       if (responseData.flag) {
-        const item = responseData.data.find(item => item.id === itemId);
-        if (item) {
-          setNewItem(item);
-          setEditItemId(itemId);
-          setShow(true);
-        } else {
-          console.error(`Item with ID ${itemId} not found`);
-        }
+        // If the item was edited successfully, fetch the items again to update the list
+        fetchItems();
+        setShow(false); // Close the modal
+        setNewItem({
+          // Reset newItem state
+          name: "",
+          stock: "",
+          category: "",
+          expiryDate: "",
+          calories: "",
+        });
+        setEditItemId(null); // Reset editItemId after editing
       } else {
-        console.error("Failed to fetch item for editing:", responseData.message);
+        console.error("Failed to edit item:", responseData.message);
       }
     } catch (error) {
       console.error("Error editing item:", error);
@@ -164,6 +179,7 @@ function Fridge() {
     setShow(false);
     setEditItemId(null); // Reset editItemId when closing the modal
   };
+
   const handleShow = () => setShow(true);
 
   const handleChange = (e) => {
@@ -213,6 +229,7 @@ function Fridge() {
                   name="name"
                   value={newItem.name}
                   onChange={handleChange}
+                  placeholder="Enter item name"
                 />
               </Form.Group>
               <Form.Group controlId="formItemQuantity">
@@ -222,6 +239,7 @@ function Fridge() {
                   name="stock"
                   value={newItem.stock}
                   onChange={handleChange}
+                  placeholder="Enter quantity"
                 />
               </Form.Group>
               <Form.Group controlId="formItemCategory">
@@ -231,6 +249,7 @@ function Fridge() {
                   name="category"
                   value={newItem.category}
                   onChange={handleChange}
+                  placeholder="Select category"
                 >
                   <option value="">Select a category</option>
                   <option value="dairy">Dairy</option>
@@ -247,6 +266,7 @@ function Fridge() {
                   name="calories"
                   value={newItem.calories}
                   onChange={handleChange}
+                  placeholder="Enter calories"
                 />
               </Form.Group>
 
@@ -257,6 +277,7 @@ function Fridge() {
                   name="expiryDate"
                   value={newItem.expiryDate}
                   onChange={handleChange}
+                  placeholder="Enter expiry date"
                 />
               </Form.Group>
             </Form>
@@ -265,9 +286,15 @@ function Fridge() {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={addItem}>
-              {editItemId ? "Save Changes" : "Add Item"}
-            </Button>
+            {editItemId ? (
+              <Button variant="primary" onClick={editItem}>
+                Save Changes
+              </Button>
+            ) : (
+              <Button variant="primary" onClick={addItem}>
+                Add Item
+              </Button>
+            )}
           </Modal.Footer>
         </Modal>
 
@@ -291,8 +318,24 @@ function Fridge() {
                 <td>{item.category}</td>
                 <td>{item.calories}</td>
                 <td>{item.expiryDate.join("/")}</td>
-                <td>{item.stock < 10 ? "Low Stock" : calculateDaysUntilExpiry(item.expiryDate) <= 0 ? "Expired" : ""}</td>
-                <td>{calculateDaysUntilExpiry(item.expiryDate) <= 3 ? "Near Expiry" : ""}</td>
+                <td className={item.stock === 1 ? "text-danger" : ""}>
+                  {item.stock === 1 ? "Low Stock" : ""}
+                </td>
+                <td
+                  className={
+                    calculateDaysUntilExpiry(item.expiryDate) <= 0
+                      ? "text-danger"
+                      : calculateDaysUntilExpiry(item.expiryDate) <= 3
+                      ? "text-warning"
+                      : ""
+                  }
+                >
+                  {calculateDaysUntilExpiry(item.expiryDate) <= 0
+                    ? "Expired"
+                    : calculateDaysUntilExpiry(item.expiryDate) <= 3
+                    ? "Near Expiry"
+                    : ""}
+                </td>
                 <td>
                   <Button
                     variant="danger"
@@ -303,7 +346,11 @@ function Fridge() {
                   </Button>
                   <Button
                     variant="primary"
-                    onClick={() => editItem(item.id)}
+                    onClick={() => {
+                      setNewItem(item); // Set the item details in newItem state
+                      setEditItemId(item.id); // Set the editItemId to the item's ID
+                      setShow(true); // Show the modal
+                    }}
                     style={{ marginLeft: "5px" }}
                   >
                     <FaEdit />

@@ -27,12 +27,12 @@ const Login = () => {
   
       if (response.ok) {
         const data = await response.json();
-        const token = data.data.token; // Retrieve the token from data.token
-        
-        localStorage.setItem('authToken', token);
-        console.log('Stored token:', localStorage.getItem('authToken')); // Test token storage
+        const token = data.data.token;
+        const userId = data.data.id;
   
-        navigate('/profile');
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('userId', userId); 
+        navigate('/profile'); // Redirect to the profile page
       } else {
         console.error('Login failed');
       }

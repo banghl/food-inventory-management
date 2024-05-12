@@ -1,5 +1,6 @@
 import React from 'react';
 import { BiFridge, BiBook, BiFoodMenu, BiCart, BiBarChart, BiLogOut } from 'react-icons/bi';
+import "../Styles/Sidebar.css";
 
 function Sidebar({ onSelectCategory, onLogout }) {
   return (
