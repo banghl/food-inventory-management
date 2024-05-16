@@ -10,6 +10,7 @@ import SignUp from './pages/SignUp';
 import Home from './pages/Home';
 import UserProfile from './pages/UserProfile'; 
 import Profile from './pages/Profile';
+import ManageMain from './pages/Manage/ManageMain';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -21,6 +22,7 @@ ReactDOM.render(
         <Route path="/home" element={<Home />} />
         <Route path="/userprofile" element={<UserProfile />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/manage" element={<ManageMain />} />
       </Routes>
     </Router>
   </React.StrictMode>,

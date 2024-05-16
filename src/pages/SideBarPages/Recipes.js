@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-
 function Recipes() {
   const [meals, setMeals] = useState([]);
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [mealsPerPage] = useState(8);
+  const [mealsPerPage] = useState(4);
   const [showModal, setShowModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -47,14 +46,14 @@ function Recipes() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="d-flex justify-content-end align-items-center vh-100">
+    <div className="d-flex justify-content-center align-items-center vh-100 ">
       <div className="bg-white p-4 rounded text-black w-100 w-lg-50 overflow-auto ms-5">
         <h1 className="mb-5">Recipes</h1>
         {isLoggedIn ? (
           <div className="row justify-content-start">
             {currentMeals.map((meal) => (
-              <div key={meal.id} className="col-12 col-md-6 col-lg-3 mb-5">
-                <div className="card h-100 meal-card">
+              <div key={meal.id} className="col-12 col-sm-6 col-md-2 col-lg-5 mb-5">
+                <div className="card h-100 m-auto meal-card">
                   <div className="card-body">
                     <h5 className="card-title">{meal.name}</h5>
                     <span className="d-block mb-3 text-muted">Cooking Time: {meal.cookingTime}</span>
