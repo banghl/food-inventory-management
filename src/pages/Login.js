@@ -28,7 +28,7 @@ const Login = () => {
       if (response.ok) {
         const data = await response.json();
         const token = data.data.token;
-        const userId = data.data.id;
+        const userId = data.data.userInfo.id;
   
         localStorage.setItem('authToken', token);
         localStorage.setItem('userId', userId); 

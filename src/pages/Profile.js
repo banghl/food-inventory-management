@@ -8,21 +8,21 @@ const ProfileSelection = () => {
   const [profileData, setProfileData] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState(null); // State to hold userId
+  const token = localStorage.getItem("token");
+   
+    const userId =localStorage.getItem("id");
 
+  console.log("data",profileData)
+  
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    const userId1 = userInfo.getItem("id"); // Extract userId from userInfo
-    setUserId(userId1); // Store userId in state
-    setIsLoggedIn(!!token);
+     // Extract userId from userInfo
+    setIsLoggedIn(!isLoggedIn);
     if (token && userId) {
       fetchProfileData(userId);
     }
   }, []);
 
-  console.log("id",userId)
-
+ 
   const fetchProfileData = async (userId) => {
     try {
       setLoading(true);
@@ -34,13 +34,8 @@ const ProfileSelection = () => {
           },
         }
       );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch profile data");
-      }
-
-      const data = await response.json();
-      if (data.flag && data.code === 200) {
+      if (response.ok) {
+        const data = await response.json();
         setProfileData(data.data);
       } else {
         throw new Error("Failed to fetch profile data");
@@ -52,9 +47,9 @@ const ProfileSelection = () => {
     }
   };
 
-  const handleProfileSelection = (profileId) => {
+  const handleProfileSelection = () => {
     navigate("/");
-    console.log(profileId);
+    
   };
 
   console.log(profileData);
@@ -77,21 +72,22 @@ const ProfileSelection = () => {
         ) : isLoggedIn ? (
           <>
             <div className="d-flex flex-wrap justify-content-center mb-3">
-              {profileData.map((profile, index) => {
-                console.log(`Key for profile at index ${index}: ${profile.id}`);
-                return (
+              {profileData.map((profile, index) => 
+               
+                 (
                   <Button
                     key={profile.id}
-                    onClick={() => handleProfileSelection(profile.id)}
+                    onClick={() => handleProfileSelection()}
                     variant="warning"
                     className="btn-lg rounded-circle mx-2 mb-2"
                     style={{ width: "100px", height: "100px" }}
                   >
                     {profile.name}
                   </Button>
-                );
-              })}
+                )
+              )}
             </div>
+            <div>90909</div>
           </>
         ) : (
           <p className="text-white">Please log in to view profiles.</p>
