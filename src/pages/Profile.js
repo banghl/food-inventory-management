@@ -8,21 +8,22 @@ const ProfileSelection = () => {
   const [profileData, setProfileData] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
-  const token = localStorage.getItem("token");
-   
-    const userId =localStorage.getItem("id");
+  const token = localStorage.getItem("authToken");
 
-  console.log("data",profileData)
-  
+  const userId = localStorage.getItem("userId");
+
+  console.log("data", profileData);
+
+  console.log("id",userId)
+
   useEffect(() => {
-     // Extract userId from userInfo
+    // Extract userId from userInfo
     setIsLoggedIn(!isLoggedIn);
     if (token && userId) {
       fetchProfileData(userId);
     }
   }, []);
 
- 
   const fetchProfileData = async (userId) => {
     try {
       setLoading(true);
@@ -47,9 +48,10 @@ const ProfileSelection = () => {
     }
   };
 
-  const handleProfileSelection = () => {
+  const handleProfileSelection = (Id) => {
     navigate("/");
-    
+    console.log(Id);
+    localStorage.setItem("profileId",Id)
   };
 
   console.log(profileData);
@@ -72,20 +74,17 @@ const ProfileSelection = () => {
         ) : isLoggedIn ? (
           <>
             <div className="d-flex flex-wrap justify-content-center mb-3">
-              {profileData.map((profile, index) => 
-               
-                 (
-                  <Button
-                    key={profile.id}
-                    onClick={() => handleProfileSelection()}
-                    variant="warning"
-                    className="btn-lg rounded-circle mx-2 mb-2"
-                    style={{ width: "100px", height: "100px" }}
-                  >
-                    {profile.name}
-                  </Button>
-                )
-              )}
+              {profileData.map((profile) => (
+                <Button
+                  key={profile.id}
+                  onClick={() => handleProfileSelection(profile.id)}
+                  variant="warning"
+                  className="btn-lg rounded-circle mx-2 mb-2"
+                  style={{ width: "100px", height: "100px" }}
+                >
+                  {profile.name}
+                </Button>
+              ))}
             </div>
             <div>90909</div>
           </>

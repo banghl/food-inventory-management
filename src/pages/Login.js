@@ -32,7 +32,7 @@ const Login = () => {
   
         localStorage.setItem('authToken', token);
         localStorage.setItem('userId', userId); 
-        navigate('/profile'); // Redirect to the profile page
+        navigate('/profile'); 
       } else {
         console.error('Login failed');
       }
