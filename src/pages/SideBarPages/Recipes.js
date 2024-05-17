@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Recipes() {
   const [meals, setMeals] = useState([]);
@@ -47,16 +48,24 @@ function Recipes() {
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 ">
-      <div className="bg-white p-4 rounded text-black w-100 w-lg-50 overflow-auto ms-5">
+      <div
+        className="bg-white p-4 rounded text-black w-100 w-lg-50 overflow-auto"
+        style={{ marginLeft: "260px" }}
+      >
         <h1 className="mb-5">Recipes</h1>
         {isLoggedIn ? (
           <div className="row justify-content-start">
             {currentMeals.map((meal) => (
-              <div key={meal.id} className="col-12 col-sm-6 col-md-2 col-lg-5 mb-5">
+              <div
+                key={meal.id}
+                className="col-12 col-sm-6 col-md-2 col-lg-5 mb-5"
+              >
                 <div className="card h-100 m-auto meal-card">
                   <div className="card-body">
                     <h5 className="card-title">{meal.name}</h5>
-                    <span className="d-block mb-3 text-muted">Cooking Time: {meal.cookingTime}</span>
+                    <span className="d-block mb-3 text-muted">
+                      Cooking Time: {meal.cookingTime}
+                    </span>
                     <button
                       className="btn btn-primary"
                       onClick={() => handleClick(meal)}

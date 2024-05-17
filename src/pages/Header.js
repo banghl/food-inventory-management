@@ -9,6 +9,7 @@ function Header() {
   const [profileAge, setAge] = useState("");
   const [profileDiet, setDiet] = useState("");
   const [profileDes, setDes] = useState("");
+  const [profileAl, setAl] = useState("");
 
   const handleProfileClick = () => {
     setShowProfileModal(true);
@@ -48,6 +49,7 @@ function Header() {
         setAge(data.data.age)
         setDiet(data.data.dietary)
         setDes(data.data.description)
+        setAl(data.data.allergies)
       } else {
         throw new Error("Failed to fetch profile data");
       }
@@ -55,9 +57,6 @@ function Header() {
       console.error("Error fetching profile data:", error);
     } 
   };
-
-
-
 
   return (
     <>
@@ -73,7 +72,7 @@ function Header() {
           </Dropdown.Toggle>
         </Dropdown>
       </div>
-      <UserProfileModal show={showProfileModal} handleClose={handleCloseProfileModal} name={profileName} age={profileAge} diet={profileDiet} description={profileDes} />
+      <UserProfileModal show={showProfileModal} handleClose={handleCloseProfileModal} name={profileName} age={profileAge} diet={profileDiet} description={profileDes} allergies={profileAl} />
     </>
   );
 }

@@ -1,7 +1,17 @@
-import React from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import React from "react";
+import { Modal, Button, Form } from "react-bootstrap";
 
-function UserProfileModal({ show, handleClose,name,age,diet, description }) {
+function UserProfileModal({ show, handleClose, name, age, diet, allergies }) {
+  const labelStyle = {
+    fontWeight: "bold", 
+    padding: "5px", 
+    width: "200px", 
+  };
+
+  const textStyle = {
+    marginLeft: "10px", 
+  };
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -10,23 +20,22 @@ function UserProfileModal({ show, handleClose,name,age,diet, description }) {
       <Modal.Body>
         <Form>
           <Form.Group controlId="formName">
-            <Form.Label>Name: </Form.Label>
-            <Form.Label> {name}</Form.Label>
+            <Form.Label style={labelStyle}>Name:</Form.Label>
+            <span style={textStyle}>{name}</span>
           </Form.Group>
 
           <Form.Group controlId="formAge">
-            <Form.Label>Age: </Form.Label>
-            <Form.Label> {age}</Form.Label>
+            <Form.Label style={labelStyle}>Age:</Form.Label>
+            <span style={textStyle}>{age}</span>
           </Form.Group>
 
           <Form.Group controlId="formDietaryPreferences">
-            <Form.Label>Dietary Preferences: </Form.Label>
-            <Form.Label> {diet}</Form.Label>
+            <Form.Label style={labelStyle}>Dietary Preferences:</Form.Label>
+            <span style={textStyle}>{diet}</span>
           </Form.Group>
-
-          <Form.Group controlId="formFoodAllergies">
-            <Form.Label>Description: </Form.Label>
-            <Form.Label> {description}</Form.Label>
+          <Form.Group controlId="formAllergies">
+            <Form.Label style={labelStyle}>Allergies:</Form.Label>
+            <span style={textStyle}>{allergies}</span>
           </Form.Group>
         </Form>
       </Modal.Body>
