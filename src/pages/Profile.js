@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
 
 const ProfileSelection = () => {
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ const ProfileSelection = () => {
 
   console.log("data", profileData);
 
-  console.log("id",userId)
+  console.log("id", userId);
 
   useEffect(() => {
     // Extract userId from userInfo
@@ -51,7 +50,7 @@ const ProfileSelection = () => {
   const handleProfileSelection = (Id) => {
     navigate("/");
     console.log(Id);
-    localStorage.setItem("profileId",Id)
+    localStorage.setItem("profileId", Id);
   };
 
   console.log(profileData);

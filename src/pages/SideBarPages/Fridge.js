@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
-
 function Fridge() {
   const [items, setItems] = useState([]);
   const [show, setShow] = useState(false);
@@ -198,11 +197,16 @@ function Fridge() {
   return (
     <div
       className="bg-dark min-vh-100 d-flex justify-content-center align-items-start "
-      style={{ marginInlineStart:"30%",width: "100%" }}
+      style={{ marginInlineStart: "30%", width: "100%" }}
     >
       <div
         className="bg-white p-4 rounded text-black"
-        style={{ marginTop: "100px", width: "100%", height: "100%" }}
+        style={{
+          marginTop: "100px",
+          width: "100%",
+          height: "800px",
+          overflowY: "scroll",
+        }}
       >
         <div
           style={{
