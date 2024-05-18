@@ -1,5 +1,5 @@
 import React from 'react';
-import { BiFridge, BiBook, BiFoodMenu, BiCart, BiBarChart, BiLogOut, BiUserCircle, BiHeart  } from 'react-icons/bi';
+import { BiFridge, BiBook, BiFoodMenu, BiCart, BiBarChart, BiLogOut, BiUserCircle, BiHeart, BiTargetLock   } from 'react-icons/bi';
 import "../Styles/Sidebar.css";
 
 function Sidebar({ onSelectCategory, onLogout, onChangeProfile }) {
@@ -13,9 +13,6 @@ function Sidebar({ onSelectCategory, onLogout, onChangeProfile }) {
         <button className="list-group-item list-group-item-action py-2 my-1" onClick={() => onSelectCategory('fridge')}>
           <BiFridge className="icon" /> Fridge
         </button>
-        <button className="list-group-item list-group-item-action py-2 my-1" onClick={() => onSelectCategory('recipes')}>
-          <BiBook className="icon" /> Recipes
-        </button>
         <button className="list-group-item list-group-item-action py-2 my-1" onClick={() => onSelectCategory('meals')}>
           <BiFoodMenu className="icon" /> Meals Planner
         </button>
@@ -24,6 +21,12 @@ function Sidebar({ onSelectCategory, onLogout, onChangeProfile }) {
         </button>
         <button className="list-group-item list-group-item-action py-2 my-1" onClick={() => onSelectCategory('shopping-list')}>
           <BiCart className="icon" /> Shopping List
+        </button>
+        <button className="list-group-item list-group-item-action py-2 my-1" onClick={() => onSelectCategory('favourite-shopping')}>
+          <BiHeart className="icon" /> Favourite Shopping List
+        </button>
+        <button className="list-group-item list-group-item-action py-2 my-1" onClick={() => onSelectCategory('nutrition')}>
+          <BiTargetLock className="icon" /> Nutrition Target
         </button>
         <button className="list-group-item list-group-item-action py-2 my-1" onClick={() => onSelectCategory('statistic')}>
           <BiBarChart className="icon" /> Statistic

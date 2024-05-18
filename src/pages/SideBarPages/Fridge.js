@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { FaTrash, FaEdit, FaUtensilSpoon } from "react-icons/fa";
 
+
 function Fridge() {
   const [items, setItems] = useState([]);
   const [show, setShow] = useState(false);
@@ -20,10 +21,13 @@ function Fridge() {
   const [takeOutItem, setTakeOutItem] = useState(null);
   const [takeOutQuantity, setTakeOutQuantity] = useState(1);
   const [showTakeOutModal, setShowTakeOutModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
     fetchItems();
-  }, []);
+    fetchProfileInfo();
+  }, []);;
 
   const fetchItems = async () => {
     try {
@@ -48,6 +52,62 @@ function Fridge() {
       }
     } catch (error) {
       console.error("Error fetching items:", error);
+    }
+  };
+
+  const fetchProfileInfo = async () => {
+    try {
+      const token = getToken();
+      const profileId = localStorage.getItem("profileId");
+      const response = await fetch(
+        `http://localhost:8080/api/v1/items/itemByProfile/${profileId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(`HTTP ${response.status}: ${message}`);
+      }
+  
+      const responseData = await response.json();
+      if (responseData.flag) {
+        setProfiles(responseData.data);
+      } else {
+        console.error("Failed to fetch profile info:", responseData.message);
+      }
+    } catch (error) {
+      console.error("Error fetching profile info:", error);
+    }
+  };
+
+  const searchItems = async () => {
+    try {
+      const token = getToken();
+      const response = await fetch(`http://localhost:8080/api/v1/items/search?item=${searchQuery}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(`HTTP ${response.status}: ${message}`);
+      }
+
+      const responseData = await response.json();
+      if (responseData.flag) {
+        setItems(responseData.data);
+      } else {
+        console.error("Failed to search items:", responseData.message);
+      }
+    } catch (error) {
+      console.error("Error searching items:", error);
     }
   };
 
@@ -221,9 +281,21 @@ function Fridge() {
           }}
         >
           <h1>Fridge</h1>
-          <Button variant="primary" onClick={handleShow}>
-            Add Item
-          </Button>
+          <div>
+            <input
+              type="text"
+              placeholder="Search for an item"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ marginRight: "10px" }}
+            />
+            <Button variant="primary" onClick={searchItems}>
+              Search
+            </Button>
+            <Button variant="primary" onClick={handleShow} style={{ marginLeft: "10px" }}>
+              Add Item
+            </Button>
+          </div>
         </div>
 
         <Modal show={show} onHide={handleClose}>
