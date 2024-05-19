@@ -59,10 +59,10 @@ function NutritionTarget() {
       const data = await response.json();
       if (data.flag && data.code === 200) {
         const totals = data.data.reduce(
-          (acc, record) => {
-            acc.calo += record.item.calories;
-            acc.protein += record.item.protein;
-            acc.fat += record.item.fat;
+          (acc, quantity) => {
+            acc.calo += quantity.item.calories;
+            acc.protein += quantity.item.protein;
+            acc.fat += quantity.item.fat;
             return acc;
           },
           { calo: 0, protein: 0, fat: 0 }
@@ -103,7 +103,6 @@ function NutritionTarget() {
      console.error("Error setting nutrition targets:", error);
    }
  };
- 
  
   const calculateProgress = (consumed, target) => {
     return target > 0 ? (consumed / target) * 100 : 0;
