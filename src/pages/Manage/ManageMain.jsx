@@ -1,19 +1,19 @@
 import { useState } from "react";
 import NavBar from "./NavBar";
 import ManageUser from "./ManageUser";
-import ManageMeal from "./ManageMeal";
+import ManageProfile from "./ManageProfile";
 export default function ManageMain() {
   const [selectedCategory, setSelectedCategory] = useState("fridge");
   let content;
   switch (selectedCategory) {
-    case "meals":
-      content = <ManageMeal />;
+    case "profiles":
+      content = <ManageProfile/>;
       break;
     case "users":
       content = <ManageUser />;
       break;
     default:
-      content = <ManageMeal />;
+      content = <ManageUser />;
   }
   return (
     <>

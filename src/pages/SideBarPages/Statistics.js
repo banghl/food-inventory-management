@@ -42,29 +42,56 @@ function Statistics() {
 
   const renderReportDetails = (report) => {
     return (
-      <>
-        <h2>{showProfileReport ? "Profile Consumption Report" : "Family Consumption Report"}</h2>
-        <p>Profile Name: {report.profileName}</p>
-        <p>Profile Age: {report.profileAge}</p>
-        <p>Dietary Preference: {report.profileDietary}</p>
-        <h3>Consumed Items:</h3>
-        {Array.isArray(report.consumedItems) && report.consumedItems.length > 0 ? (
-          <ul>
-            {report.consumedItems.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>No consumed items found.</p>
-        )}
-        <h3>Nutrition Summary:</h3>
-        <p>Total Calories Remaining: {report.totalCaloriesRemaining}</p>
-        <p>Total Protein Remaining: {report.totalProteinRemaining}</p>
-        <p>Total Fat Remaining: {report.totalFatRemaining}</p>
-        <p>Total Calories Consumed: {report.totalCaloriesConsumed}</p>
-        <p>Total Protein Consumed: {report.totalProteinConsumed}</p>
-        <p>Total Fat Consumed: {report.totalFatConsumed}</p>
-      </>
+      <div className="card mb-3">
+        <div className="card-header">
+          <h2>{showProfileReport ? "Profile Consumption Report" : "Family Consumption Report"}</h2>
+        </div>
+        <div className="card-body">
+          <h5 className="card-title">Profile Details</h5>
+          <p className="card-text">Profile Name: {report.profileName}</p>
+          <p className="card-text">Profile Age: {report.profileAge}</p>
+          <p className="card-text">Dietary Preference: {report.profileDietary}</p>
+          <h5 className="card-title">Items Added</h5>
+          {Array.isArray(report.consumedItems) && report.consumedItems.length > 0 ? (
+            <ul className="list-group list-group-flush">
+              {report.consumedItems.map((item, index) => (
+                <li className="list-group-item" key={index}>{item}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="card-text">No items added found.</p>
+          )}
+          <h5 className="card-title">Nutrition Summary</h5>
+          <table className="table">
+            <tbody>
+              <tr>
+                <th scope="row">Total Calories Remaining</th>
+                <td>{report.totalCaloriesRemaining}</td>
+              </tr>
+              <tr>
+                <th scope="row">Total Protein Remaining</th>
+                <td>{report.totalProteinRemaining}</td>
+              </tr>
+              <tr>
+                <th scope="row">Total Fat Remaining</th>
+                <td>{report.totalFatRemaining}</td>
+              </tr>
+              <tr>
+                <th scope="row">Total Calories Consumed</th>
+                <td>{report.totalCaloriesConsumed}</td>
+              </tr>
+              <tr>
+                <th scope="row">Total Protein Consumed</th>
+                <td>{report.totalProteinConsumed}</td>
+              </tr>
+              <tr>
+                <th scope="row">Total Fat Consumed</th>
+                <td>{report.totalFatConsumed}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
   };
 

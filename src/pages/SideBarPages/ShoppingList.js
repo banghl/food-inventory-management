@@ -19,20 +19,35 @@ function ShoppingList() {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
-          },
+          }
         }
       );
       const data = await response.json();
       if (Array.isArray(data.data)) {
+        // Create an object to keep track of item quantities
+        const itemQuantities = {};
+  
         // Map over the data to extract the required item details
-        const itemsDetails = data.data.map((item) => ({
-          id: item.item.id, // Assuming item.item.id is unique
-          name: item.item.name.trim(),
-          category: item.item.category,
-          calories: item.item.calories,
-          protein: item.item.protein,
-          fat: item.item.fat,
-        }));
+        data.data.forEach((item) => {
+          const itemId = item.item.id;
+          if (itemQuantities[itemId]) {
+            itemQuantities[itemId].quantity += item.quantity; // Increment quantity if item already exists
+          } else {
+            // Add new item with quantity set to the fetched quantity
+            itemQuantities[itemId] = {
+              id: itemId,
+              name: item.item.name.trim(),
+              category: item.item.category,
+              calories: item.item.calories,
+              protein: item.item.protein,
+              fat: item.item.fat,
+              quantity: item.quantity,
+            };
+          }
+        });
+  
+        // Convert the object back to an array for setting the state
+        const itemsDetails = Object.values(itemQuantities);
         setConsumedItems(itemsDetails);
       } else {
         setConsumedItems([]);
@@ -42,6 +57,7 @@ function ShoppingList() {
       setConsumedItems([]);
     }
   };
+  
 
   const generateShoppingList = async () => {
     try {
@@ -84,33 +100,36 @@ function ShoppingList() {
   };
 
   const addToFavorites = (userId, shoppingListId) => {
-    const token = localStorage.getItem('authToken');
-  
+    const token = localStorage.getItem("authToken");
+
     if (!token) {
-      console.error('User not authenticated');
+      console.error("User not authenticated");
       return;
     }
-  
+
     fetch(
       `http://localhost:8080/api/v1/shopping-lists/assign?userId=${userId}&shoppingListId=${shoppingListId}`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     )
       .then((response) => response.json())
       .then((data) => {
         if (data.flag && data.code === 200) {
-          alert('Shopping list added to favorites successfully!');
+          alert("Shopping list added to favorites successfully!");
         } else {
-          console.error('Failed to add shopping list to favorites:', data.message);
+          console.error(
+            "Failed to add shopping list to favorites:",
+            data.message
+          );
         }
       })
       .catch((error) => {
-        console.error('Error adding to favorites:', error);
+        console.error("Error adding to favorites:", error);
       });
   };
 
@@ -142,6 +161,7 @@ function ShoppingList() {
               <th scope="col">Calories</th>
               <th scope="col">Protein</th>
               <th scope="col">Fat</th>
+              <th scope="col">Quantity</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -153,6 +173,7 @@ function ShoppingList() {
                 <td>{item.calories}</td>
                 <td>{item.protein}</td>
                 <td>{item.fat}</td>
+                <td>{item.quantity}</td>
                 <td>
                   <input
                     type="checkbox"
@@ -186,7 +207,8 @@ function ShoppingList() {
                         ))}
                       </ul>
                       <p className="card-text mb-3">
-                        <span className="fw-bold">Cost:</span> ${list.cost.toFixed(2)}
+                        <span className="fw-bold">Cost:</span> $
+                        {list.cost.toFixed(2)}
                       </p>
                       <p className="card-text mb-3">{list.description}</p>
                       <button

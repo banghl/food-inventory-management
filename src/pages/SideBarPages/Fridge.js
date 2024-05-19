@@ -235,7 +235,8 @@ function Fridge() {
       const token = getToken();
       const profileId = localStorage.getItem("profileId");
       const itemId = takeOutItem.id;
-
+  
+      // API to transfer the item based on provided details
       const url = `http://localhost:8080/api/v1/consumption-records/transfer?profileId=${profileId}&itemId=${itemId}&quantity=${takeOutQuantity}`;
       const response = await fetch(url, {
         method: "POST",
@@ -244,14 +245,15 @@ function Fridge() {
           "Content-Type": "application/json",
         },
       });
-
+  
       if (!response.ok) {
         const message = await response.text();
         throw new Error(`HTTP ${response.status}: ${message}`);
       }
-
+  
       const responseData = await response.json();
       if (responseData.flag) {
+        // Successfully transferred, now refresh the items list
         fetchItems();
         setShowTakeOutModal(false);
         setTakeOutQuantity(1);
@@ -263,6 +265,7 @@ function Fridge() {
       console.error("Error taking out item:", error);
     }
   };
+  
 
   const handleTakeOutConfirm = (item) => {
     setTakeOutItem(item);
