@@ -501,7 +501,7 @@ function Fridge() {
                     <Button
                       variant="danger"
                       onClick={() => deleteItem(item.id)}
-                      style={{ marginRight: "5px" }}
+                      style={{ marginRight: "5px", fontSize: "0.7rem" }}
                     >
                       <FaTrash />
                     </Button>
@@ -512,14 +512,14 @@ function Fridge() {
                         setEditItemId(item.id);
                         setShow(true);
                       }}
-                      style={{ marginLeft: "5px" }}
+                      style={{ marginLeft: "5px", fontSize: "0.7rem" }}
                     >
                       <FaEdit />
                     </Button>
                     <Button
                       variant="success"
                       onClick={() => handleTakeOutConfirm(item)}
-                      style={{ marginLeft: "5px" }}
+                      style={{ marginLeft: "5px",fontSize: "0.7rem" }}
                     >
                       <FaUtensilSpoon />
                     </Button>
