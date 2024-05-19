@@ -16,7 +16,7 @@ const Login = () => {
     };
   
     try {
-      const response = await fetch('http://localhost:8080/api/v1/users/login', {
+      const loginResponse = await fetch('http://localhost:8080/api/v1/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,14 +25,36 @@ const Login = () => {
         body: JSON.stringify(requestBody),
       });
   
-      if (response.ok) {
-        const data = await response.json();
-        const token = data.data.token;
-        const userId = data.data.userInfo.id;
+      if (loginResponse.ok) {
+        const loginData = await loginResponse.json();
+        const token = loginData.data.token;
+        const userId = loginData.data.userInfo.id;
   
         localStorage.setItem('authToken', token);
-        localStorage.setItem('userId', userId); 
-        navigate('/profile'); 
+        localStorage.setItem('userId', userId);
+  
+        // Fetch the user's role
+        const roleResponse = await fetch(`http://localhost:8080/api/v1/users/${userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+  
+        if (roleResponse.ok) {
+          const roleData = await roleResponse.json();
+          const userRole = roleData.data.roles; // Assuming the role is included in the response
+  
+          // Navigate based on the role
+          if (userRole === 'ADMIN') {
+            navigate('/manage');
+          } else if (userRole === 'USER') {
+            navigate('/profile');
+          } else {
+            console.error('Unknown role');
+          }
+        } else {
+          console.error('Failed to fetch user role');
+        }
       } else {
         console.error('Login failed');
       }

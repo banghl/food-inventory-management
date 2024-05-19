@@ -3,14 +3,14 @@ import { Button } from "react-bootstrap";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
 export default function ManageUser() {
-    const [food, setFood] = useState([]);
+    const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10); // Number of items per page
 
-    const fetchItems = async () => {
+    const fetchUsers = async () => {
         try {
             const token = localStorage.getItem("authToken");
-            const response = await fetch(`http://localhost:8080/api/v1/profiles/users/2`, {
+            const response = await fetch(`http://localhost:8080/api/v1/users`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -24,70 +24,51 @@ export default function ManageUser() {
 
             const responseData = await response.json();
             if (responseData.flag) {
-                setFood(responseData.data);
+                setUsers(responseData.data);
             } else {
-                console.error("Failed to fetch items:", responseData.message);
+                console.error("Failed to fetch users:", responseData.message);
             }
         } catch (error) {
-            console.error("Error fetching items:", error);
+            console.error("Error fetching users:", error);
         }
     };
 
     useEffect(() => {
-        fetchItems();
-    }, []); // Trigger fetchItems when currentPage changes
-
-    
-
-    console.log("food: ", food);
+        fetchUsers();
+    }, []); // Trigger fetchUsers when currentPage changes
 
     return (
         <div className="bg-white p-4 rounded text-black"
             style={{
-                
                 width: "100%",
                 height: "100%",
-               
             }}>
             <table className="table table-striped text-dark">
                 <thead>
                     <tr>
-                        <th scope="col">Users'ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Age</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Dietary</th>
+                        <th scope="col">User ID</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Roles</th>
+                        <th scope="col">Profiles</th>
+                        <th scope="col">Shopping Lists</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {food.map((user) => (
+                    {users.map((user) => (
                         <tr key={user.id}>
-                           <td>
-                            {user.id}
-                           </td>
-                           <td>
-                            {user.name}
-                           </td>
-                           <td>
-                            {user.age}
-                           </td>
-                           <td>
-                            {user.description}
-                           </td>
-                           <td>
-                            {user.dietary}
-                           </td>
+                            <td>{user.id}</td>
+                            <td>{user.username}</td>
+                            <td>{user.email}</td>
+                            <td>{user.roles}</td>
+                            <td>{user.numberOfProfiles}</td>
+                            <td>{user.numberOfShoppingLists}</td>
                             <td>
-                                <Button
-                                    variant="danger"
-                                    style={{ marginRight: "5px" }}
-                                >
+                                <Button variant="danger" style={{ marginRight: "5px" }}>
                                     <FaTrash />
                                 </Button>
-                                <Button
-                                    variant="primary"
-                                    style={{ marginLeft: "5px" }}
-                                >
+                                <Button variant="primary" style={{ marginLeft: "5px" }}>
                                     <FaEdit />
                                 </Button>
                             </td>
