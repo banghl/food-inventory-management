@@ -57,22 +57,25 @@ function NutritionTarget() {
         }
       );
       const data = await response.json();
+      console.log("Consumption data:", data); 
       if (data.flag && data.code === 200) {
         const totals = data.data.reduce(
-          (acc, quantity) => {
-            acc.calo += quantity.item.calories;
-            acc.protein += quantity.item.protein;
-            acc.fat += quantity.item.fat;
+          (acc, record) => {
+            acc.calo += record.item.calories * record.quantity; 
+            acc.protein += record.item.protein * record.quantity; 
+            acc.fat += record.item.fat * record.quantity;
             return acc;
           },
           { calo: 0, protein: 0, fat: 0 }
         );
+        console.log("Consumed nutrients:", totals); // Log the calculated totals
         setConsumedNutrients(totals);
       }
     } catch (error) {
       console.error("Error fetching consumed items:", error);
     }
   };
+  
 
   const handleTargetChange = (e) => {
     setNutritionTargets({
