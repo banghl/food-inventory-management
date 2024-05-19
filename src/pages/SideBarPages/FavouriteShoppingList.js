@@ -14,7 +14,7 @@ function FavouriteShoppingList() {
     try {
       const userId = localStorage.getItem('userId');
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`http://localhost:8080/api/v1/shopping-lists/view/${userId}`, {
+      const response = await fetch(`http://localhost:8080/api/v1/shopping-lists/view/${userId}}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',

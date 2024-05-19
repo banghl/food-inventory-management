@@ -24,6 +24,7 @@ function ShoppingList() {
       );
       const data = await response.json();
       if (Array.isArray(data.data)) {
+        // Create an object to keep track of item quantities
         const itemQuantities = {};
   
         // Map over the data to extract the required item details
@@ -105,6 +106,7 @@ function ShoppingList() {
       console.error("User not authenticated");
       return;
     }
+
     fetch(
       `http://localhost:8080/api/v1/shopping-lists/assign?userId=${userId}&shoppingListId=${shoppingListId}`,
       {
@@ -138,7 +140,7 @@ function ShoppingList() {
   return (
     <div
       className="bg-dark min-vh-100 d-flex justify-content-center align-items-start"
-      style={{ marginLeft: "250px", marginTop: "30px", overflow: "auto" }}
+      style={{ marginLeft: "250px", marginTop: "70px", overflow: "auto" }}
     >
       <div
         className="bg-white p-4 rounded text-black"
