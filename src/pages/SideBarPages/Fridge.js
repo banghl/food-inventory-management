@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { FaTrash, FaEdit, FaUtensilSpoon } from "react-icons/fa";
 
-
 function Fridge() {
   const [items, setItems] = useState([]);
+  const [profileItems, setProfileItems] = useState([]);
   const [show, setShow] = useState(false);
   const [editItemId, setEditItemId] = useState(null);
+  const [profileItemIds, setProfileItemIds] = useState([]);
+
   const [newItem, setNewItem] = useState({
     name: "",
     stock: "",
@@ -22,12 +24,11 @@ function Fridge() {
   const [takeOutQuantity, setTakeOutQuantity] = useState(1);
   const [showTakeOutModal, setShowTakeOutModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
     fetchItems();
-    fetchProfileInfo();
-  }, []);;
+    fetchProfileItems();
+  }, []);
 
   const fetchItems = async () => {
     try {
@@ -55,7 +56,7 @@ function Fridge() {
     }
   };
 
-  const fetchProfileInfo = async () => {
+  const fetchProfileItems = async () => {
     try {
       const token = getToken();
       const profileId = localStorage.getItem("profileId");
@@ -68,32 +69,37 @@ function Fridge() {
           },
         }
       );
-  
+
       if (!response.ok) {
         const message = await response.text();
         throw new Error(`HTTP ${response.status}: ${message}`);
       }
-  
+
       const responseData = await response.json();
       if (responseData.flag) {
-        setProfiles(responseData.data);
+        setProfileItems(responseData.data);
+        const profileIds = responseData.data.map((item) => item.id);
+        setProfileItemIds(profileIds);
       } else {
-        console.error("Failed to fetch profile info:", responseData.message);
+        console.error("Failed to fetch profile items:", responseData.message);
       }
     } catch (error) {
-      console.error("Error fetching profile info:", error);
+      console.error("Error fetching profile items:", error);
     }
   };
 
   const searchItems = async () => {
     try {
       const token = getToken();
-      const response = await fetch(`http://localhost:8080/api/v1/items/search?item=${searchQuery}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `http://localhost:8080/api/v1/items/search?item=${searchQuery}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         const message = await response.text();
@@ -116,13 +122,13 @@ function Fridge() {
       const token = getToken();
       const profileId = localStorage.getItem("profileId");
       const url = editItemId
-        ? `http://localhost:8080/api/v1/items/update/${profileId}`
-        : `http://localhost:8080/api/v1/items/${profileId}/add`;
+        ? `http://localhost:8080/api/v1/items/update/${editItemId}` // Update existing item
+        : `http://localhost:8080/api/v1/items/${profileId}/add`; // Add new item
       const method = editItemId ? "PUT" : "POST";
-
+  
       const capitalizedCategory =
         newItem.category.charAt(0).toUpperCase() + newItem.category.slice(1);
-
+  
       // Set purchaseDate to current date if it's not set
       const currentDate = new Date();
       const formattedCurrentDate = currentDate.toISOString().split("T")[0];
@@ -131,7 +137,7 @@ function Fridge() {
         category: capitalizedCategory,
         purchaseDate: newItem.purchaseDate || formattedCurrentDate,
       };
-
+  
       const response = await fetch(url, {
         method,
         headers: {
@@ -140,15 +146,16 @@ function Fridge() {
         },
         body: JSON.stringify(itemToSubmit),
       });
-
+  
       if (!response.ok) {
         const message = await response.text();
         throw new Error(`HTTP ${response.status}: ${message}`);
       }
-
+  
       const responseData = await response.json();
       if (responseData.flag) {
         fetchItems();
+        fetchProfileItems();
         setShow(false);
         setNewItem({
           name: "",
@@ -156,6 +163,8 @@ function Fridge() {
           category: "",
           expiryDate: "",
           calories: "",
+          protein: "",
+          fat: "",
           purchaseDate: "",
         });
         setEditItemId(null);
@@ -166,7 +175,7 @@ function Fridge() {
       console.error("Error adding/editing item:", error);
     }
   };
-
+  
   const deleteItem = async (itemId) => {
     try {
       const token = getToken();
@@ -189,6 +198,7 @@ function Fridge() {
       const responseData = await response.json();
       if (responseData.flag) {
         fetchItems();
+        fetchProfileItems();
       } else {
         console.error("Failed to delete item:", responseData.message);
       }
@@ -270,7 +280,7 @@ function Fridge() {
           marginTop: "100px",
           width: "100%",
           height: "700px",
-          overflowY: "scroll",
+          overflowY: "auto",
         }}
       >
         <div
@@ -292,7 +302,11 @@ function Fridge() {
             <Button variant="primary" onClick={searchItems}>
               Search
             </Button>
-            <Button variant="primary" onClick={handleShow} style={{ marginLeft: "10px" }}>
+            <Button
+              variant="primary"
+              onClick={handleShow}
+              style={{ marginLeft: "10px" }}
+            >
               Add Item
             </Button>
           </div>
@@ -353,26 +367,26 @@ function Fridge() {
                   onChange={handleChange}
                   placeholder="Enter calories"
                 />
-                <Form.Group controlId="formItemProtein">
-                  <Form.Label>Protein</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="protein"
-                    value={newItem.protein}
-                    onChange={handleChange}
-                    placeholder="Enter protein"
-                  />
-                </Form.Group>
-                <Form.Group controlId="formItemFat">
-                  <Form.Label>Fat</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="fat"
-                    value={newItem.fat}
-                    onChange={handleChange}
-                    placeholder="Enter fat"
-                  />
-                </Form.Group>
+              </Form.Group>
+              <Form.Group controlId="formItemProtein">
+                <Form.Label>Protein</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="protein"
+                  value={newItem.protein}
+                  onChange={handleChange}
+                  placeholder="Enter protein"
+                />
+              </Form.Group>
+              <Form.Group controlId="formItemFat">
+                <Form.Label>Fat</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="fat"
+                  value={newItem.fat}
+                  onChange={handleChange}
+                  placeholder="Enter fat"
+                />
               </Form.Group>
               <Form.Group controlId="formItemExpiryDate">
                 <Form.Label>Expiry Date</Form.Label>
@@ -396,7 +410,6 @@ function Fridge() {
           </Modal.Footer>
         </Modal>
 
-        {/* Modal for taking out item */}
         <Modal
           show={showTakeOutModal}
           onHide={() => setShowTakeOutModal(false)}
@@ -447,62 +460,73 @@ function Fridge() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
-              <tr key={item.id}>
-                <td>{item.stock}</td>
-                <td>{item.name}</td>
-                <td>{item.category}</td>
-                <td>{item.calories}</td>
-                <td>{item.protein}</td>
-                <td>{item.fat}</td>
-                <td>{new Date(item.expiryDate).toLocaleDateString()}</td>
-                <td className={item.stock === 1 ? "text-danger" : ""}>
-                  {item.stock === 1 ? "Low Stock" : ""}
-                </td>
-                <td
-                  className={
-                    calculateDaysUntilExpiry(item.expiryDate) <= 0
-                      ? "text-danger"
-                      : calculateDaysUntilExpiry(item.expiryDate) <= 3
-                      ? "text-warning"
-                      : ""
-                  }
+            {items.map((item) => {
+              const isProfileItem = profileItems.some(
+                (profileItem) => profileItem.id === item.id
+              );
+              console.log(
+                `Item ID: ${item.id}, Is Profile Item: ${isProfileItem}`
+              );
+
+              return (
+                <tr
+                  key={item.id}
                 >
-                  {calculateDaysUntilExpiry(item.expiryDate) <= 0
-                    ? "Expired"
-                    : calculateDaysUntilExpiry(item.expiryDate) <= 3
-                    ? "Near Expiry"
-                    : ""}
-                </td>
-                <td>
-                  <Button
-                    variant="danger"
-                    onClick={() => deleteItem(item.id)}
-                    style={{ marginRight: "5px" }}
+                  <td>{item.stock}</td>
+                  <td style={{ fontWeight: isProfileItem ? "bold" : "normal", color: isProfileItem ? "red" : "inherit" }}>{item.name}</td>
+                  <td>{item.category}</td>
+                  <td>{item.calories}</td>
+                  <td>{item.protein}</td>
+                  <td>{item.fat}</td>
+                  <td>{new Date(item.expiryDate).toLocaleDateString()}</td>
+                  <td className={item.stock === 1 ? "text-danger" : ""}>
+                    {item.stock === 1 ? "Low Stock" : ""}
+                  </td>
+                  <td
+                    className={
+                      calculateDaysUntilExpiry(item.expiryDate) <= 0
+                        ? "text-danger"
+                        : calculateDaysUntilExpiry(item.expiryDate) <= 3
+                        ? "text-warning"
+                        : ""
+                    }
                   >
-                    <FaTrash />
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      setNewItem(item);
-                      setEditItemId(item.id);
-                      setShow(true);
-                    }}
-                    style={{ marginLeft: "5px" }}
-                  >
-                    <FaEdit />
-                  </Button>
-                  <Button
-                    variant="success"
-                    onClick={() => handleTakeOutConfirm(item)}
-                    style={{ marginLeft: "5px" }}
-                  >
-                    <FaUtensilSpoon />
-                  </Button>
-                </td>
-              </tr>
-            ))}
+                    {calculateDaysUntilExpiry(item.expiryDate) <= 0
+                      ? "Expired"
+                      : calculateDaysUntilExpiry(item.expiryDate) <= 3
+                      ? "Near Expiry"
+                      : ""}
+                  </td>
+                  <td>
+                    <Button
+                      variant="danger"
+                      onClick={() => deleteItem(item.id)}
+                      style={{ marginRight: "5px" }}
+                    >
+                      <FaTrash />
+                    </Button>
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        setNewItem(item);
+                        setEditItemId(item.id);
+                        setShow(true);
+                      }}
+                      style={{ marginLeft: "5px" }}
+                    >
+                      <FaEdit />
+                    </Button>
+                    <Button
+                      variant="success"
+                      onClick={() => handleTakeOutConfirm(item)}
+                      style={{ marginLeft: "5px" }}
+                    >
+                      <FaUtensilSpoon />
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

@@ -121,7 +121,7 @@ function ShoppingList() {
   return (
     <div
       className="bg-dark min-vh-100 d-flex justify-content-center align-items-start"
-      style={{ marginLeft: "200px", overflow: "auto" }}
+      style={{ marginLeft: "250px", marginTop: "70px", overflow: "auto" }}
     >
       <div
         className="bg-white p-4 rounded text-black"
