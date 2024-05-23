@@ -179,8 +179,9 @@ function Fridge() {
   const deleteItem = async (itemId) => {
     try {
       const token = getToken();
+      const profileId = localStorage.getItem("profileId");
       const response = await fetch(
-        `http://localhost:8080/api/v1/items/delete/${itemId}`,
+        `http://localhost:8080/api/v1/items/removeFromFridge/${profileId}/${itemId}`,
         {
           method: "DELETE",
           headers: {
@@ -189,12 +190,12 @@ function Fridge() {
           },
         }
       );
-
+  
       if (!response.ok) {
         const message = await response.text();
         throw new Error(`HTTP ${response.status}: ${message}`);
       }
-
+  
       const responseData = await response.json();
       if (responseData.flag) {
         fetchItems();

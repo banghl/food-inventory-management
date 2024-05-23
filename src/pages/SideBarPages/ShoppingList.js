@@ -4,6 +4,7 @@ function ShoppingList() {
   const [consumedItems, setConsumedItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [shoppingList, setShoppingList] = useState([]);
+  const [daysToGenerate, setDaysToGenerate] = useState(7); // Default value is 7 days
 
   useEffect(() => {
     fetchConsumedItems();
@@ -65,7 +66,7 @@ function ShoppingList() {
       // Join the names of the selected items with commas
       const items = selectedItems.map((item) => item.name.trim()).join(",");
       const response = await fetch(
-        `http://localhost:8080/api/v1/shopping-lists/generate?items=${items}&days=7`,
+        `http://localhost:8080/api/v1/shopping-lists/generate?items=${items}&days=${daysToGenerate}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -73,6 +74,12 @@ function ShoppingList() {
           },
         }
       );
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(`HTTP ${response.status}: ${message}`);
+      }
+
       const data = await response.json();
       if (data.flag && data.code === 200) {
         setShoppingList(data.data);
@@ -153,6 +160,20 @@ function ShoppingList() {
       >
         <h1>Shopping List</h1>
         <h2>Consumed Items</h2>
+        <div className="mb-3">
+          <label htmlFor="daysToGenerate" className="form-label">
+            Number of Days to Generate Shopping List:
+          </label>
+          <select
+            id="daysToGenerate"
+            className="form-select"
+            value={daysToGenerate}
+            onChange={(e) => setDaysToGenerate(parseInt(e.target.value))}
+          >
+            <option value="3">3 Days</option>
+            <option value="7">7 Days</option>
+          </select>
+        </div>
         <table className="table table-striped text-dark text-center">
           <thead>
             <tr>

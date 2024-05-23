@@ -9,25 +9,23 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const requestBody = {
       username,
       email,
       password,
+      roles: "USER",
     };
-
+  
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/v1/users/register?role=USER",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
-
+      const response = await fetch("http://localhost:8080/api/v1/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+  
       if (response.ok) {
         // Registration successful, redirect to login page
         window.location.href = "/login";
